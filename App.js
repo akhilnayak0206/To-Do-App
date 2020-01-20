@@ -1,15 +1,13 @@
 import React from 'react';
-import { StyleSheet, ScrollView } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-const App = () => {
+export default function App() {
   return (
-    <View>
-      <Text>Make changes in App.js</Text>
+    <View style={styles.container}>
+      <Text>Open up App.js to start working on your app!</Text>
     </View>
   );
-};
-
-export default App;
+}
 
 const styles = StyleSheet.create({
   container: {
