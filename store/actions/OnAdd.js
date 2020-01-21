@@ -1,7 +1,7 @@
 import { ADD_TASK } from '../types';
 
 const OnAdd = data => dispatch => {
-  dispatch({
+  return dispatch({
     type: ADD_TASK,
     payload: data
   });
