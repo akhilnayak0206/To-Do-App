@@ -1,5 +1,6 @@
 import OnAdd from './OnAdd';
+import OnDelete from './OnDelete';
+import OnFilter from './OnFilter';
+import OnShowModal from './OnShowModal';
 
-export default {
-  OnAdd
-};
+export { OnAdd, OnDelete, OnFilter, OnShowModal };

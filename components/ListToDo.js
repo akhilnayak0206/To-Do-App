@@ -1,5 +1,6 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, TouchableOpacity, View } from 'react-native';
+import PropTypes from 'prop-types';
 import {
   Container,
   Header,
@@ -16,57 +17,22 @@ import {
   Form
 } from 'native-base';
 import { connect } from 'react-redux';
-import { OnAdd } from './store/actions/actions';
+import { OnShowModal } from '../store/actions/actions';
 
-const ListToDo = ({ toDoList, OnAdd }) => {
+const ListToDo = ({ toDoList, OnShowModal, showModal }) => {
   const [selected, setSelected] = useState(undefined);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const onValueChange = value => {
     setSelected(value);
   };
 
-  console.log(toDoList, 'here');
   return (
     <List>
-      <Modal
-        animationType='slide'
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(false);
-        }}
-      >
-        <View
-          style={{
-            flex: 3,
-            backgroundColor: 'black',
-            zIndex: 10,
-            opacity: 0.5
-          }}
-        >
-          <TouchableOpacity
-            style={{ flex: 1 }}
-            onPress={() => {
-              setModalVisible(false);
-            }}
-          />
-        </View>
-        <View
-          style={{
-            flex: 5,
-            padding: '5%',
-            zIndex: 10,
-            backgroundColor: 'white'
-          }}
-        >
-          <Text>Hello World!</Text>
-        </View>
-      </Modal>
       <ListItem
         style={{ flex: 1 }}
         button
-        onPress={() => setModalVisible(true)}
+        onPress={() => OnShowModal({ type: 'showDetails', showDetails: true })}
       >
         <Icon
           type='Feather'
@@ -96,8 +62,15 @@ const ListToDo = ({ toDoList, OnAdd }) => {
   );
 };
 
+ListToDo.propTypes = {
+  OnShowModal: PropTypes.func.isRequired,
+  toDoList: PropTypes.array.isRequired,
+  showModal: PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => ({
-  toDoList: state.toDoList
+  toDoList: state.toDoList,
+  showModal: state.showModal
 });
 
-export default connect(mapStateToProps, { OnAdd })(ListToDo);
+export default connect(mapStateToProps, { OnShowModal })(ListToDo);
