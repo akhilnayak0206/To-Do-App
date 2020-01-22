@@ -22,12 +22,29 @@ import {
 const ModalDetails = ({
   OnShowModal,
   OnChangeStatus,
+  toDoList,
   showModal: { showDetails, details }
 }) => {
   const onValueChange = (key, value) => {
     OnChangeStatus({ key, status: value });
   };
 
+  const [listKey, setListKey] = useState();
+
+  const getStatusKey = () => {
+    details &&
+      toDoList.some((obj, key) => {
+        if (obj.id === details.id) {
+          return setListKey(key);
+        }
+      });
+  };
+
+  useEffect(() => {
+    getStatusKey();
+  }, [details]);
+
+  console.log('second', listKey, details);
   return (
     <Modal
       animationType='slide'
@@ -77,7 +94,7 @@ const ModalDetails = ({
           <Content padder>
             <ScrollView>
               <Form>
-                {showDetails && (
+                {showDetails && listKey >= 0 && (
                   <Textarea
                     rowSpan={10}
                     style={{
@@ -113,7 +130,7 @@ const ModalDetails = ({
               iosIcon={<Icon name='arrow-up' />}
               placeholder='Select'
               style={{ width: '100%' }}
-              selectedValue={details.status}
+              selectedValue={toDoList[listKey].status}
               onValueChange={value => onValueChange(details.id, value)}
             >
               <Picker.Item label='Not Completed' value='NC' />
@@ -130,11 +147,13 @@ const ModalDetails = ({
 ModalDetails.propTypes = {
   OnShowModal: PropTypes.func.isRequired,
   OnChangeStatus: PropTypes.func.isRequired,
-  showModal: PropTypes.object.isRequired
+  showModal: PropTypes.object.isRequired,
+  toDoList: PropTypes.array.isRequired
 };
 
 const mapStateToProps = state => ({
-  showModal: state.showModal
+  showModal: state.showModal,
+  toDoList: state.toDoList
 });
 
 export default connect(mapStateToProps, { OnShowModal, OnChangeStatus })(

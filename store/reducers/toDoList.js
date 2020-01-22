@@ -1,7 +1,7 @@
 import { ADD_TASK, DELETE_TASK, MODIFY_STATUS } from '../types';
 
 const initialState = [
-  { id: '0', title: 'Task1', description: 'Some description', status: 'NC' }
+  // { id: '0', title: 'Task1', description: 'Some description', status: 'NC' }  //This is the structure of the object
 ];
 
 const toDoList = (state = initialState, action) => {

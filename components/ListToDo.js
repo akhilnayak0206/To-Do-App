@@ -44,8 +44,6 @@ const ListToDo = ({
     }
   }, [filterTask, toDoList]);
 
-  console.log(toDoList, filteredList);
-
   const onValueChange = (key, value) => {
     OnChangeStatus({ key, status: value });
   };

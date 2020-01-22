@@ -1,7 +1,6 @@
 import { SHOW_DETAILS, SHOW_ADD, SHOW_FILTER } from '../types';
 
 const OnShowModal = data => dispatch => {
-  console.log('went', data);
   switch (data.type) {
     case 'showDetails': {
       return dispatch({
