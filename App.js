@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import Constants from 'expo-constants';
 import { Provider } from 'react-redux';
 import store from './store/store';
 import MainView from './MainView';
+import { Root } from 'native-base';
 const statusBarHeight = Constants.statusBarHeight;
 
 class App extends React.Component {
@@ -30,11 +31,12 @@ class App extends React.Component {
     if (!this.state.isReady) {
       return <AppLoading />;
     }
-
     return (
       <Provider store={store}>
         <SafeAreaView style={styles.safeArea}>
-          <MainView />
+          <Root>
+            <MainView />
+          </Root>
         </SafeAreaView>
       </Provider>
     );

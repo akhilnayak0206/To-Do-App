@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, TouchableOpacity, View } from 'react-native';
+import { Modal, TouchableOpacity, View, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import {
   Container,
@@ -14,63 +14,128 @@ import {
   ListItem,
   Text,
   Picker,
-  Form
+  Form,
+  Toast
 } from 'native-base';
 import { connect } from 'react-redux';
-import { OnShowModal } from '../store/actions/actions';
+import {
+  OnShowModal,
+  OnChangeStatus,
+  OnDelete
+} from '../store/actions/actions';
 
-const ListToDo = ({ toDoList, OnShowModal, showModal }) => {
-  const [selected, setSelected] = useState(undefined);
-  const [visible, setVisible] = useState(false);
+const ListToDo = ({
+  toDoList,
+  OnShowModal,
+  OnChangeStatus,
+  OnDelete,
+  filterTask
+}) => {
+  const [filteredList, setFilteredList] = useState([]);
 
-  const onValueChange = value => {
-    setSelected(value);
+  useEffect(() => {
+    if (filterTask.selectFilter === 'SAF') {
+      setFilteredList([...toDoList]);
+    } else {
+      let list = toDoList.filter(obj => {
+        return obj.status === filterTask.selectFilter;
+      });
+      setFilteredList([...list]);
+    }
+  }, [filterTask, toDoList]);
+
+  console.log(toDoList, filteredList);
+
+  const onValueChange = (key, value) => {
+    OnChangeStatus({ key, status: value });
+  };
+
+  const deleteToDo = value => {
+    Alert.alert(
+      `Delete Task`,
+      `Do you want to delete ${value.data.title}`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed for delete'),
+          style: 'cancel'
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            OnDelete(value.key);
+            Toast.show({
+              text: `${value.data.title} deleted`,
+              buttonText: 'Okay',
+              type: 'danger'
+            });
+          }
+        }
+      ],
+      { cancelable: false }
+    );
   };
 
   return (
     <List>
-      <ListItem
-        style={{ flex: 1 }}
-        button
-        onPress={() => OnShowModal({ type: 'showDetails', showDetails: true })}
-      >
-        <Icon
-          type='Feather'
-          name='x-circle'
-          onPress={() => alert('ok')}
-          style={{ flex: 1 }}
-        />
-        <Body style={{ flex: 6 }}>
-          <Text>Airplane Modesdkvjbsdkjvbsdkjvbsjk</Text>
-        </Body>
-        <Right style={{ flex: 5 }}>
-          <Picker
-            mode='dropdown'
-            iosIcon={<Icon name='arrow-down' />}
-            placeholder='Select'
-            style={{ width: '100%' }}
-            selectedValue={selected}
-            onValueChange={value => onValueChange(value)}
+      {filteredList &&
+        filteredList.map((data, key) => (
+          <ListItem
+            style={{ flex: 1 }}
+            button
+            onPress={() =>
+              OnShowModal({
+                type: 'showDetails',
+                showDetails: true,
+                details: data
+              })
+            }
+            key={key}
           >
-            <Picker.Item label='Not Completed' value='key0' />
-            <Picker.Item label='Partially Completed' value='key1' />
-            <Picker.Item label='Completed' value='key2' />
-          </Picker>
-        </Right>
-      </ListItem>
+            <Icon
+              type='Feather'
+              name='x-circle'
+              onPress={() => deleteToDo({ data, key: data.id })}
+              style={{ flex: 1 }}
+            />
+            <Body style={{ flex: 6 }}>
+              <Text>{data.title}</Text>
+            </Body>
+            <Right style={{ flex: 5 }}>
+              <Picker
+                mode='dropdown'
+                iosIcon={<Icon name='arrow-down' />}
+                placeholder='Select'
+                style={{ width: '100%' }}
+                selectedValue={data.status}
+                onValueChange={value => onValueChange(data.id, value)}
+              >
+                <Picker.Item label='Not Completed' value='NC' />
+                <Picker.Item label='Partially Completed' value='PC' />
+                <Picker.Item label='Completed' value='C' />
+              </Picker>
+            </Right>
+          </ListItem>
+        ))}
     </List>
   );
 };
 
 ListToDo.propTypes = {
   OnShowModal: PropTypes.func.isRequired,
+  OnDelete: PropTypes.func.isRequired,
+  OnChangeStatus: PropTypes.func.isRequired,
   toDoList: PropTypes.array.isRequired,
-  showModal: PropTypes.object.isRequired
+  filterTask: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   toDoList: state.toDoList,
-  showModal: state.showModal
+  filterTask: state.filterTask
 });
 
-export default connect(mapStateToProps, { OnShowModal })(ListToDo);
+export default connect(mapStateToProps, {
+  OnShowModal,
+  OnChangeStatus,
+  OnDelete
+})(ListToDo);

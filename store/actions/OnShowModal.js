@@ -6,7 +6,7 @@ const OnShowModal = data => dispatch => {
     case 'showDetails': {
       return dispatch({
         type: SHOW_DETAILS,
-        payload: data.showDetails
+        payload: data
       });
     }
     case 'showAdd': {

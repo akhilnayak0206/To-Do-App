@@ -9,7 +9,8 @@ const toDoList = (state = initialState, action) => {
       console.log(state, 'details');
       return {
         ...state,
-        showDetails: payload,
+        showDetails: payload.showDetails,
+        details: payload.details,
         showAdd: false,
         showFilter: false
       };

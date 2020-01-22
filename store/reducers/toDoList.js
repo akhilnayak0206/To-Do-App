@@ -1,7 +1,7 @@
-import { ADD_TASK, DELETE_TASK, FILTER_TASK } from '../types';
+import { ADD_TASK, DELETE_TASK, MODIFY_STATUS } from '../types';
 
 const initialState = [
-  { title: 'Task1', description: 'Some description', status: 'NC' }
+  { id: '0', title: 'Task1', description: 'Some description', status: 'NC' }
 ];
 
 const toDoList = (state = initialState, action) => {
@@ -10,10 +10,20 @@ const toDoList = (state = initialState, action) => {
     case ADD_TASK:
       return [...state, payload];
     case DELETE_TASK: {
-      return [...state, payload];
+      state = state.filter(obj => {
+        return obj.id !== payload;
+      });
+      return [...state];
     }
-    case FILTER_TASK: {
-      return [...state, payload];
+    case MODIFY_STATUS: {
+      for (let i = 0; i < state.length; i++) {
+        if (state[i].id === payload.key) {
+          state[i].status = payload.status;
+          break;
+        }
+      }
+      console.log(state, 'todo');
+      return [...state];
     }
     default:
       return state;

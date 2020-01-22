@@ -17,6 +17,7 @@ import {
   Textarea,
   Input
 } from 'native-base';
+import uuid from 'uuid/v1';
 
 const ModalAdd = ({ OnAdd, OnShowModal, showModal: { showAdd } }) => {
   const [title, setTitle] = useState('');
@@ -27,7 +28,7 @@ const ModalAdd = ({ OnAdd, OnShowModal, showModal: { showAdd } }) => {
       if (description.length !== 0) {
         setTitle('');
         setDescription('');
-        OnAdd({ title, description, status: 'NC' });
+        OnAdd({ id: uuid(), title, description, status: 'NC' });
         OnShowModal({ type: 'showAdd', showAdd: false });
       } else {
         alert('Enter description');

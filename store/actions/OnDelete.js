@@ -1,9 +1,9 @@
 import { DELETE_TASK } from '../types';
 
-const OnDelete = data => dispatch => {
+const OnDelete = deleteKey => dispatch => {
   dispatch({
     type: DELETE_TASK,
-    payload: data
+    payload: deleteKey
   });
 };
 

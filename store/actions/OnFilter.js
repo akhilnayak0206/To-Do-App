@@ -1,9 +1,9 @@
 import { FILTER_TASK } from '../types';
 
-const OnFilter = data => dispatch => {
+const OnFilter = filterKey => dispatch => {
   dispatch({
     type: FILTER_TASK,
-    payload: data
+    payload: filterKey
   });
 };
 
