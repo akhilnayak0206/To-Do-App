@@ -22,7 +22,6 @@ const toDoList = (state = initialState, action) => {
           break;
         }
       }
-      console.log(state, 'todo');
       return [...state];
     }
     default:
