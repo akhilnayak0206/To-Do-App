@@ -8,7 +8,6 @@ import {
   OnDelete
 } from '../store/actions/actions';
 import {
-  Text,
   Button,
   Header,
   Left,
@@ -19,7 +18,6 @@ import {
   Content,
   Form,
   Textarea,
-  Input,
   Picker,
   Toast
 } from 'native-base';

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import React from 'react';
+import { View, Modal, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { OnShowModal, OnFilter } from '../store/actions/actions';
@@ -13,11 +13,6 @@ import {
   Icon,
   Title,
   Content,
-  Form,
-  Textarea,
-  Input,
-  List,
-  ListItem,
   Picker
 } from 'native-base';
 

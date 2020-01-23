@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, TouchableOpacity, View, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import {
-  Container,
-  Header,
-  Left,
   Body,
   Right,
-  Button,
   Icon,
-  Title,
   List,
   ListItem,
   Text,
   Picker,
-  Form,
   Toast
 } from 'native-base';
 import { connect } from 'react-redux';
