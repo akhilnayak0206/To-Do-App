@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { View, Modal, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Modal, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { OnShowModal, OnChangeStatus } from '../store/actions/actions';
+import {
+  OnShowModal,
+  OnChangeStatus,
+  OnDelete
+} from '../store/actions/actions';
 import {
   Text,
   Button,
@@ -16,13 +20,15 @@ import {
   Form,
   Textarea,
   Input,
-  Picker
+  Picker,
+  Toast
 } from 'native-base';
 
 const ModalDetails = ({
   OnShowModal,
   OnChangeStatus,
   toDoList,
+  OnDelete,
   showModal: { showDetails, details }
 }) => {
   const onValueChange = (key, value) => {
@@ -44,7 +50,34 @@ const ModalDetails = ({
     getStatusKey();
   }, [details]);
 
-  console.log('second', listKey, details);
+  const deleteToDo = value => {
+    Alert.alert(
+      `Delete Task`,
+      `Do you want to delete ${value.details.title}`,
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed for delete'),
+          style: 'cancel'
+        },
+        {
+          text: 'OK',
+          onPress: () => {
+            setListKey(undefined);
+            OnDelete(value.key);
+            OnShowModal({ type: 'showDetails', showDetails: false });
+            Toast.show({
+              text: `${value.details.title} deleted`,
+              buttonText: 'Okay',
+              type: 'danger'
+            });
+          }
+        }
+      ],
+      { cancelable: false }
+    );
+  };
+
   return (
     <Modal
       animationType='slide'
@@ -89,12 +122,19 @@ const ModalDetails = ({
               </Button>
             </Left>
             <Body>{showDetails && <Title>{details.title}</Title>}</Body>
-            <Right />
+            <Right>
+              <Button
+                transparent
+                onPress={() => deleteToDo({ details, key: details.id })}
+              >
+                <Icon type='AntDesign' name='delete' />
+              </Button>
+            </Right>
           </Header>
           <Content padder>
             <ScrollView>
               <Form>
-                {showDetails && listKey >= 0 && (
+                {showDetails && (
                   <Textarea
                     rowSpan={10}
                     style={{
@@ -111,16 +151,16 @@ const ModalDetails = ({
             </ScrollView>
           </Content>
         </View>
-        {showDetails && (
+        {showDetails && listKey >= 0 && (
           <Button
             style={{
               flex: 1,
               width: '100%',
               justifyContent: 'center',
               backgroundColor:
-                details.status === 'C' // Check for completed
+                toDoList[listKey].status === 'C' // Check for completed
                   ? '#FFC107' // Completed === true
-                  : details.status === 'NC' // If false then check Not Completed
+                  : toDoList[listKey].status === 'NC' // If false then check Not Completed
                   ? '#D1BA72' // Not  Completed
                   : '#FFD862' // Partially Completed
             }}
@@ -156,6 +196,8 @@ const mapStateToProps = state => ({
   toDoList: state.toDoList
 });
 
-export default connect(mapStateToProps, { OnShowModal, OnChangeStatus })(
-  ModalDetails
-);
+export default connect(mapStateToProps, {
+  OnShowModal,
+  OnChangeStatus,
+  OnDelete
+})(ModalDetails);
